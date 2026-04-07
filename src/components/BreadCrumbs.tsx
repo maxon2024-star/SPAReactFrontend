@@ -13,16 +13,16 @@ interface BreadCrumbsProps {
 }
 
 export const BreadCrumbs: FC<BreadCrumbsProps> = ({ crumbs }) => {
-  // Если массив пуст, значит мы находимся на главной странице
-  const isHome = crumbs.length === 0;
+  // Если массив пуст, значит мы находимся в каталоге (корневая страница)
+  const isRoot = crumbs.length === 0;
 
   return (
     <ul className="breadcrumbs">
       <li>
-        {isHome ? (
-          <span className="current-page">Главная</span>
+        {isRoot ? (
+          <span className="current-page">Каталог излучений</span>
         ) : (
-          <Link to={ROUTES.HOME} className="breadcrumb-link">Главная</Link>
+          <Link to={ROUTES.RADIATIONS} className="breadcrumb-link">Каталог излучений</Link>
         )}
       </li>
       

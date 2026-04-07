@@ -3,7 +3,6 @@ import type { FC } from "react";
 import { RADIATIONS_MOCK } from "../modules/mock";
 import type { RadiationRange } from "../modules/mock";
 import { BreadCrumbs } from "../components/BreadCrumbs";
-import { ROUTE_LABELS } from "../Routes";
 import { RadiationCard } from "../components/RadiationCard";
 
 export const RadiationsPage: FC = () => {
@@ -20,7 +19,8 @@ export const RadiationsPage: FC = () => {
 
   return (
     <div className="app-container">
-      <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.RADIATIONS }]} />
+      {/* Пустой массив, так как мы на корневой странице каталога */}
+      <BreadCrumbs crumbs={[]} />
       
       <div className="sub-header">
         <div className="search-box">

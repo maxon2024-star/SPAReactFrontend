@@ -23,7 +23,6 @@ export const RadiationDetailPage: FC = () => {
     <div className="app-container">
       <BreadCrumbs
         crumbs={[
-          { label: ROUTE_LABELS.RADIATIONS, path: ROUTES.RADIATIONS },
           { label: radiation.name },
         ]}
       />

@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '../Routes';
 import defaultImage from '../assets/image.png';
 
 interface Props {
@@ -16,7 +15,8 @@ export const RadiationCard: FC<Props> = ({ id, name, description, image_url }) =
         <div className="card-image-wrapper">
             <img src={image_url || defaultImage} alt={name} className="card-image" />
             <div className="card-overlay">
-                <Link to={`${ROUTES.RADIATIONS}/${id}`} className="btn-details">👁️ Подробнее</Link>
+                {/* Исправленная ссылка: ведет ровно на /1, /2 и т.д. */}
+                <Link to={`/${id}`} className="btn-details">👁️ Подробнее</Link>
             </div>
         </div>
         <div className="card-info">
