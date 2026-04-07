@@ -10,7 +10,7 @@ function App() {
   return (
     <BrowserRouter>
       <div style={{maxWidth: '1200px', margin: '0 auto'}}>
-        <NavBar /> {/* В NavBar нужно удалить ссылку на корзину, оставив только Навигацию */}
+        <NavBar />
       </div>
       
       <Routes>
@@ -19,7 +19,7 @@ function App() {
         <Route path={`${ROUTES.RADIATIONS}/:id`} element={<RadiationDetailPage />} />
       </Routes>
       
-      <CartWidget /> {/* Плавающий виджет */}
+      <CartWidget />
     </BrowserRouter>
   );
 }

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../Routes';
-import defaultImage from '../assets/DefaultImage.png';
+import defaultImage from '../assets/image.png';
 
 interface Props {
   id: number;

@@ -8,21 +8,41 @@ interface ICrumb {
   path?: string;
 }
 
-export const BreadCrumbs: FC<{ crumbs: ICrumb[] }> = ({ crumbs }) => {
+interface BreadCrumbsProps {
+  crumbs: ICrumb[];
+}
+
+export const BreadCrumbs: FC<BreadCrumbsProps> = ({ crumbs }) => {
+  // Если массив пуст, значит мы находимся на главной странице
+  const isHome = crumbs.length === 0;
+
   return (
-    <ul className="breadcrumbs" style={{display: 'flex', listStyle: 'none', padding: 0, gap: '10px'}}>
-      <li><Link to={ROUTES.HOME}>Главная</Link></li>
-      {!!crumbs.length &&
-        crumbs.map((crumb, index) => (
+    <ul className="breadcrumbs">
+      <li>
+        {isHome ? (
+          <span className="current-page">Главная</span>
+        ) : (
+          <Link to={ROUTES.HOME} className="breadcrumb-link">Главная</Link>
+        )}
+      </li>
+      
+      {crumbs.map((crumb, index) => {
+        const isLast = index === crumbs.length - 1;
+        return (
           <React.Fragment key={index}>
             <li className="slash">/</li>
-            {index === crumbs.length - 1 ? (
-              <li style={{color: 'black', fontWeight: 'bold'}}>{crumb.label}</li>
-            ) : (
-              <li><Link to={crumb.path || ""}>{crumb.label}</Link></li>
-            )}
+            <li>
+              {isLast ? (
+                <span className="current-page">{crumb.label}</span>
+              ) : (
+                <Link to={crumb.path || ""} className="breadcrumb-link">
+                  {crumb.label}
+                </Link>
+              )}
+            </li>
           </React.Fragment>
-        ))}
+        );
+      })}
     </ul>
   );
 };

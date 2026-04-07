@@ -14,11 +14,6 @@ export const NavBar: FC = () => {
             <Nav.Link as={Link} to={ROUTES.HOME}>Главная</Nav.Link>
             <Nav.Link as={Link} to={ROUTES.RADIATIONS}>Каталог излучений</Nav.Link>
           </Nav>
-          <Nav>
-             <Nav.Link as={Link} to={ROUTES.CART} className="cart-icon" style={{fontSize: '1.5rem'}}>
-                🛒<span className="cart-count">1</span>
-             </Nav.Link>
-          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
