@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { RADIATIONS_MOCK } from "../modules/mock";
 import type { RadiationRange } from "../modules/mock";
 import { BreadCrumbs } from "../components/BreadCrumbs";
-import { ROUTES, ROUTE_LABELS } from "../Routes";
 
 export const RadiationDetailPage: FC = () => {
   const { id } = useParams();
@@ -39,15 +38,8 @@ export const RadiationDetailPage: FC = () => {
               <h2 className="video-title">{radiation.name}</h2>
               <p className="video-description">{radiation.description}</p>
           </div>
-
-          {/* TikTok-кнопка добавления в корзину */}
-          <button 
-            className="tiktok-like-btn" 
-            onClick={() => alert('Добавлено в заявку!')}
-            title="Добавить в корзину"
-          >
-            ➕
-          </button>
+          
+          {/* Кнопка "Добавить" успешно удалена */}
         </div>
       </div>
     </div>

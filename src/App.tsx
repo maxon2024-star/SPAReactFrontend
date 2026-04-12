@@ -3,7 +3,6 @@ import { ROUTES } from "./Routes";
 import { NavBar } from "./components/NavBar";
 import { RadiationsPage } from "./pages/RadiationsPage";
 import { RadiationDetailPage } from "./pages/RadiationDetailPage";
-import { CartWidget } from "./components/CartWidget";
 
 function App() {
   return (
@@ -19,8 +18,6 @@ function App() {
         {/* Подробная страница услуги */}
         <Route path="/:id" element={<RadiationDetailPage />} />
       </Routes>
-      
-      <CartWidget />
     </BrowserRouter>
   );
 }

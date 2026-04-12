@@ -5,7 +5,6 @@ export const CartWidget: FC = () => {
   return (
     <div className="floating-cart" style={{ cursor: 'default' }}>
       🛒
-      <span className="floating-cart-count">{CART_MOCK.length}</span>
     </div>
   );
 };
