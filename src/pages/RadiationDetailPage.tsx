@@ -116,9 +116,9 @@ export const RadiationDetailPage: FC = () => {
 
       {/* Блок похожих услуг (CLIP) */}
       <div className="similar-radiations-section" style={{ marginTop: '2rem' }}>
-        <h3>Похожие излучения (AI рекомендации):</h3>
+        <h3>Похожие излучения:</h3>
         {isAiLoading ? (
-          <p>Анализируем описания через нейросеть...</p>
+          <p>Анализируем описания...</p>
         ) : (
           <div className="services-grid" style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
             {similarItems.length > 0 ? (

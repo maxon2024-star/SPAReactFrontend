@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type { FC } from "react";
+import { Link } from "react-router-dom";
 import { CART_MOCK } from "../modules/mock";
 
 export const CartWidget: FC = () => {
@@ -19,8 +20,8 @@ export const CartWidget: FC = () => {
   }, []);
 
   return (
-    <div className="cart-widget" style={{ padding: '8px 16px', background: '#f0f0f0', borderRadius: '8px', fontWeight: 'bold' }}>
-      🛒 Корзина: {count}
-    </div>
+    <Link to="/cart" className="floating-cart" title="Перейти в корзину">
+      🛒
+    </Link>
   );
 };
