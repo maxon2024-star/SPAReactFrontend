@@ -15,7 +15,6 @@ export const RadiationCard: FC<Props> = ({ id, name, description, image_url }) =
         <div className="card-image-wrapper">
             <img src={image_url || defaultImage} alt={name} className="card-image" />
             <div className="card-overlay">
-                {/* Исправленная ссылка: ведет ровно на /1, /2 и т.д. */}
                 <Link to={`/${id}`} className="btn-details">👁️ Подробнее</Link>
             </div>
         </div>

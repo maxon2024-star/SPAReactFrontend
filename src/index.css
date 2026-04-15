@@ -123,6 +123,9 @@ body {
     transition: all 0.3s;
     border: 1px solid var(--border);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .service-card:hover {
@@ -202,6 +205,9 @@ body {
 
 .card-info {
     padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .card-title {
@@ -246,6 +252,15 @@ body {
 .btn-add:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px var(--primary-glow);
+}
+
+.badge-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Ограничивает описание ровно 3 строками */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: auto; /* Прижимает всё остальное содержимое вниз */
 }
 
 /* ================= СТРАНИЦА ПОДРОБНЕЕ ================= */

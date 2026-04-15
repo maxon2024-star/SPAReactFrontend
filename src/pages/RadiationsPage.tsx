@@ -1,3 +1,4 @@
+// src/pages/RadiationsPage.tsx
 import { useState, useEffect } from "react";
 import type { FC } from "react";
 import { RADIATIONS_MOCK } from "../modules/mock";
@@ -11,17 +12,17 @@ export const RadiationsPage: FC = () => {
   const [radiations, setRadiations] = useState<RadiationRange[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Функция загрузки данных с бэкенда или mock
+  // GET запрос №1: Список услуг с фильтрацией
   const fetchRadiations = async (search: string = "") => {
     setIsLoading(true);
     try {
       const query = search ? `?search=${encodeURIComponent(search)}` : "";
       const res = await fetch(`/api/radiations${query}`);
-      if (!res.ok) throw new Error("Бэкенд вернул ошибку");
+      if (!res.ok) throw new Error();
       const data = await res.json();
       setRadiations(data);
     } catch (error) {
-      console.warn("Бэкенд недоступен, используем mock-данные (RADIATIONS_MOCK)", error);
+      console.warn("Fallback на mock-данные", error);
       const filtered = RADIATIONS_MOCK.filter((item) =>
         item.name.toLowerCase().includes(search.toLowerCase())
       );
@@ -31,50 +32,26 @@ export const RadiationsPage: FC = () => {
     }
   };
 
-  // Первичная загрузка
-  useEffect(() => {
-    fetchRadiations();
-  }, []);
-
-  const handleSearch = () => {
-    fetchRadiations(searchValue);
-  };
+  useEffect(() => { fetchRadiations(); }, []);
 
   return (
     <div className="app-container">
       <BreadCrumbs crumbs={[]} />
-      
-      <div className="sub-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div className="search-box" style={{ flexGrow: 1, display: 'flex' }}>
-            <input 
-              type="text" 
-              placeholder="Поиск диапазонов излучения..." 
-              value={searchValue} 
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="search-input" 
-            />
-            <button onClick={handleSearch} className="btn-details" style={{ padding: '8px 20px', marginLeft: '10px' }}>
-                Найти
-            </button>
-        </div>
-        <CartWidget />
+      <div className="sub-header" style={{ display: 'flex', gap: '10px' }}>
+        <input 
+          type="text" 
+          placeholder="Поиск по названию..." 
+          value={searchValue} 
+          onChange={(e) => setSearchValue(e.target.value)}
+          className="search-input" 
+        />
+        <button onClick={() => fetchRadiations(searchValue)} className="btn-details">Найти</button>
+        <CartWidget /> {/* GET запрос №3 внутри компонента (корзина) */}
       </div>
-
       <h2 className="section-title">Каталог диапазонов</h2>
-      
-      {isLoading ? (
-        <p>Загрузка данных...</p>
-      ) : (
-        <div className="services-grid">
-          {radiations.length > 0 ? (
-            radiations.map((item) => (
-              <RadiationCard key={item.id} {...item} />
-            ))
-          ) : (
-            <h4>Ничего не найдено :(</h4>
-          )}
-        </div>
-      )}
+      <div className="services-grid">
+        {isLoading ? <p>Загрузка...</p> : radiations.map(r => <RadiationCard key={r.id} {...r} />)}
+      </div>
     </div>
   );
 };
