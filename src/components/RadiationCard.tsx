@@ -1,54 +1,54 @@
-import type { FC } from 'react';
-import { Link } from 'react-router-dom';
-import defaultImage from '../assets/image.png';
+import type { FC } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import type { RadiationRange } from "../modules/mock";
+import { addToDraft } from "../slices/applicationSlice";
+import { RootState } from "../store";
 
-interface Props {
-  id: number;
-  name: string;
-  short_description?: string;
-  description: string;
-  image_url: string;
-  score?: number; // Данные от CLIP
+interface RadiationCardProps extends RadiationRange {
+  score?: number; // Для ИИ CLIP
 }
 
-export const RadiationCard: FC<Props> = ({ id, name, short_description, description, image_url, score }) => {
-  return (
-    <div className="service-card">
-        <div className="card-image-wrapper">
-            <img src={image_url || defaultImage} alt={name} className="card-image" />
-            <div className="card-overlay">
-                <Link to={`/${id}`} className="btn-details">👁️ Подробнее</Link>
-            </div>
-        </div>
-        <div className="card-info">
-            <h3 className="card-title">{name}</h3>
-            
-            {/* Вывод процента сходства, если есть данные от CLIP */}
-            {score !== undefined && (
-                <div className="similarity-badge" style={{ 
-                    backgroundColor: 'rgba(76, 175, 80, 0.1)', 
-                    color: '#4caf50', 
-                    padding: '4px 8px', 
-                    borderRadius: '4px',
-                    fontSize: '0.85rem',
-                    fontWeight: 'bold',
-                    display: 'inline-block',
-                    marginBottom: '10px'
-                }}>
-                    🔍 Сходство: {(score * 100).toFixed(1)}%
-                </div>
-            )}
+export const RadiationCard: FC<RadiationCardProps> = ({ id, name, description, image_url, score }) => {
+  const dispatch = useDispatch();
+  const isAuth = useSelector((state: RootState) => state.auth.isAuth);
 
-            <div className="card-specs">
-                <div className="spec-item">
-                    <span className="spec-icon" style={{color:"var(--primary)"}}>⚡</span>
-                    {/* Приоритетно выводим краткое описание, фоллбэк на обычное */}
-                    <div className="badge-description">
-                        {short_description ? short_description : description}
-                    </div>
-                </div>
-            </div>
+  const handleAdd = () => {
+    // Вносим услугу в новую/текущую заявку с дефолтными параметрами М-М
+    dispatch(addToDraft({
+      radiation_id: id,
+      area: 1,
+      efficiency: 1,
+      frequency: 1,
+      work_function: 1
+    }) as any);
+  };
+
+  return (
+    <div className="service-card radiation-card">
+      {/* Если есть score от CLIP, показываем его */}
+      {score !== undefined && (
+        <div className="similarity-badge">
+          ИИ: {(score * 100).toFixed(1)}%
         </div>
+      )}
+      <div className="service-icon">
+        <img src={image_url || '/placeholder.png'} alt={name} style={{ width: '100%', borderRadius: '8px' }} />
+      </div>
+      <div className="radiation-card-content mt-2">
+        <h3 className="service-title">{name}</h3>
+        <p className="service-desc">{description.substring(0, 80)}...</p>
+      </div>
+      <div className="card-actions">
+        <Link to={`/radiations/${id}`} className="btn-details" style={{ textDecoration: 'none', display: 'inline-block' }}>
+          Подробнее
+        </Link>
+        {isAuth && (
+          <button onClick={handleAdd} className="btn btn-primary btn-sm">
+            Добавить
+          </button>
+        )}
+      </div>
     </div>
   );
 };
