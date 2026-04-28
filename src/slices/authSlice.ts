@@ -12,10 +12,24 @@ interface AuthState {
   isAuth: boolean;
 }
 
+const storedToken = localStorage.getItem('jwt');
+const storedUser = localStorage.getItem('user');
+
+// Безопасный парсинг пользователя
+let parsedUser = null;
+// Проверяем, что storedUser существует и не равен строке "undefined"
+if (storedUser && storedUser !== 'undefined') {
+  try {
+    parsedUser = JSON.parse(storedUser);
+  } catch (error) {
+    console.error('Ошибка парсинга пользователя из localStorage:', error);
+  }
+}
+
 const initialState: AuthState = {
-  user: null,
-  token: localStorage.getItem('jwt'),
-  isAuth: !!localStorage.getItem('jwt'),
+  user: parsedUser,
+  token: storedToken && storedToken !== 'undefined' ? storedToken : null,
+  isAuth: !!(storedToken && storedToken !== 'undefined'),
 };
 
 export const authSlice = createSlice({
@@ -27,12 +41,14 @@ export const authSlice = createSlice({
       state.token = action.payload.token;
       state.isAuth = true;
       localStorage.setItem('jwt', action.payload.token);
+      localStorage.setItem('user', JSON.stringify(action.payload.user));
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.isAuth = false;
       localStorage.removeItem('jwt');
+      localStorage.removeItem('user');
     },
   },
 });

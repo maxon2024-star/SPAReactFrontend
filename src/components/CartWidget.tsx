@@ -1,25 +1,18 @@
-// src/components/CartWidget.tsx
-import { useEffect } from "react";
 import type { FC } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store";
+import { ROUTES } from "../Routes";
 
 export const CartWidget: FC = () => {
-  useEffect(() => {
-    fetch('/api/calculations/draft-summary')
-      .then(res => {
-        if (!res.ok) throw new Error('Ошибка сети');
-        return res.json();
-      })
-      .catch((err) => {
-        console.warn('Бэкенд недоступен', err);
-      });
-  }, []);
+  // Берем ID черновика прямо из Redux (никаких лишних запросов!)
+  const draftId = useSelector((state: RootState) => state.applications.draftId);
 
   return (
     <Link 
-      to="/cart" 
+      to={draftId ? `${ROUTES.CALCULATIONS}/${draftId}` : '#'} 
       className="floating-cart" 
-      title="Перейти в корзину"
+      title={draftId ? "Перейти в черновик" : "Корзина пуста"}
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -27,11 +20,12 @@ export const CartWidget: FC = () => {
         width: '45px',
         height: '45px',
         borderRadius: '50%',
-        backgroundColor: '#0d6efd',
+        backgroundColor: draftId ? '#0d6efd' : '#6c757d',
         color: 'white',
         textDecoration: 'none',
         fontWeight: 'bold',
-        fontSize: '14px'
+        fontSize: '14px',
+        pointerEvents: draftId ? 'auto' : 'none' // Отключаем клик, если черновика нет
       }}
     >
       🛒

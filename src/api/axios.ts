@@ -9,7 +9,8 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('jwt');
-  if (token) {
+  // Строгая проверка, чтобы не отправить сломанный токен
+  if (token && token !== 'undefined' && token !== 'null') {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

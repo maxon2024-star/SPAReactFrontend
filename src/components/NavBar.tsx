@@ -5,53 +5,69 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ROUTES } from '../Routes';
 import { logout } from '../slices/authSlice';
 import { clearDraftAndFilters } from '../slices/applicationSlice';
-import type { RootState } from '../store';
+import type { RootState, AppDispatch } from '../store';
 
 export const NavBar: FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  
   const { isAuth, user } = useSelector((state: RootState) => state.auth);
   const { draftId } = useSelector((state: RootState) => state.applications);
 
   const handleLogout = () => {
+    // При выходе сбрасываем авторизацию, а также черновик и фильтры по ТЗ
     dispatch(logout());
     dispatch(clearDraftAndFilters());
     navigate(ROUTES.RADIATIONS);
   };
 
   return (
-    <Navbar bg="light" expand="lg" className="mb-4 main-header" style={{ borderRadius: '12px' }}>
+    <Navbar bg="white" expand="lg" className="mb-4 rounded shadow-sm border">
       <Container>
-        <Navbar.Brand as={Link} to={ROUTES.RADIATIONS} className="app-title">⚡ Фотоэффект</Navbar.Brand>
+        <Navbar.Brand as={Link} to={ROUTES.RADIATIONS} className="fw-bold text-primary fs-4">
+          ⚡ Эффект
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto align-items-center">
             {isAuth ? (
               <>
-                <span className="me-3 fw-bold">Привет, {user?.login || 'Пользователь'}</span>
+                <span className="me-3 fw-bold text-secondary">
+                  Привет, {user?.login || 'Пользователь'}
+                </span>
+                
                 <Button 
                   as={Link} 
                   to={ROUTES.CALCULATIONS}
-                  variant="info"
+                  variant="outline-info"
                   className="me-2"
                 >
-                  Все заявки
+                  Все расчеты (Журнал)
                 </Button>
+                
+                {/* ТЗ: Если черновик есть - кнопка доступна (primary), нет - другой стиль (secondary) и disabled */}
                 <Button 
                   as={Link} 
                   to={draftId ? `${ROUTES.CALCULATIONS}/${draftId}` : '#'}
                   variant={draftId ? "primary" : "secondary"}
                   disabled={!draftId}
-                  className="me-3"
+                  className="me-3 fw-bold"
                 >
-                  Черновик {draftId && `(#${draftId})`}
+                  {draftId ? `🛒 Текущая заявка (#${draftId})` : '🛒 Корзина пуста'}
                 </Button>
-                <Button variant="outline-danger" onClick={handleLogout}>Выход</Button>
+
+                <Button variant="outline-danger" onClick={handleLogout}>
+                  Выход
+                </Button>
               </>
             ) : (
               <>
-                <Button as={Link} to={ROUTES.LOGIN} variant="outline-primary" className="me-2">Вход</Button>
-                <Button as={Link} to={ROUTES.REGISTER} variant="primary">Регистрация</Button>
+                <Button as={Link} to={ROUTES.LOGIN} variant="outline-primary" className="me-2">
+                  Вход
+                </Button>
+                <Button as={Link} to={ROUTES.REGISTER} variant="primary">
+                  Регистрация
+                </Button>
               </>
             )}
           </Nav>
