@@ -34,7 +34,7 @@ export function useRadiationSearch(initialData: RadiationRange[]) {
 
       if (initPromise) {
         await initPromise;
-        setReady(true);
+        if (globalModels) setReady(true);
         return;
       }
 
@@ -71,11 +71,15 @@ export function useRadiationSearch(initialData: RadiationRange[]) {
           console.log("🚀 [CLIP] Все модели успешно загружены в память!");
         } catch (error) {
           console.error("❌ Ошибка инициализации CLIP:", error);
+          // Сбрасываем промис при обрыве сети, чтобы не зависнуть навсегда
+          initPromise = null; 
         }
       })();
 
       await initPromise;
-      setReady(true);
+      if (globalModels) {
+        setReady(true);
+      }
     };
 
     initModels();

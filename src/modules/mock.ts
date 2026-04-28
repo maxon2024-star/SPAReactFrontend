@@ -4,10 +4,10 @@ import radVideo from '../assets/xray.mp4';
 export interface RadiationRange {
   id: number;
   name: string;
+  short_description?: string; 
   description: string;
   image_url: string;
-  video_url: string;
-  score?: number;
+  score?: number;             
 }
 
 export const RADIATIONS_MOCK: RadiationRange[] = [

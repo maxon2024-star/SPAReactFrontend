@@ -34,7 +34,7 @@ export const CartWidget: FC = () => {
         fontSize: '14px'
       }}
     >
-      🛒 0
+      🛒
     </Link>
   );
 };
