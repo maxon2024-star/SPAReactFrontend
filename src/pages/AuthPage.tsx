@@ -20,23 +20,18 @@ export const AuthPage: React.FC<AuthProps> = ({ type }) => {
     e.preventDefault();
     setError('');
     try {
-      // 1. Подготавливаем данные: при регистрации обязательно передаем role: 1 (Физик)
       const payload = type === 'register' 
         ? { login, password, role: 1 } 
         : { login, password };
 
       const endpoint = type === 'login' ? '/api/users/login' : '/api/users/register';
       
-      // 2. Отправляем запрос
       let res = await apiClient.post(endpoint, payload);
 
-      // 3. Бэкенд не возвращает токен при регистрации. 
-      // Поэтому сразу после успешной регистрации автоматически выполняем логин.
       if (type === 'register') {
         res = await apiClient.post('/api/users/login', { login, password });
       }
 
-      // 4. Достаем токен (согласно Postman, он лежит в access_token)
       const token = res.data.access_token || res.data.token;
       
       if (!token) {
@@ -44,15 +39,36 @@ export const AuthPage: React.FC<AuthProps> = ({ type }) => {
         return;
       }
 
-      // 5. Сохраняем пользователя и токен
-      const user = res.data.user || { id: 1, login: login, role: type === 'register' ? 1 : (res.data.role || 1) };
+      // ИЩЕМ РОЛЬ МОДЕРАТОРА: Пытаемся вытащить её из тела JWT токена
+      let actualRole = type === 'register' ? 1 : (res.data.role || 1);
+      try {
+        const base64Url = token.split('.')[1];
+        if (base64Url) {
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          }).join(''));
+          const parsedToken = JSON.parse(jsonPayload);
+          
+          if (parsedToken.role) actualRole = parsedToken.role;
+          if (parsedToken.Role) actualRole = parsedToken.Role;
+        }
+      } catch (e) {
+        console.error("Ошибка при чтении роли из токена:", e);
+      }
+
+      // Сохраняем пользователя с корректной ролью
+      const user = res.data.user || { 
+        id: res.data.id || Date.now(), 
+        login: login, 
+        role: actualRole 
+      };
       
       dispatch(setAuth({ user, token }));
       navigate(ROUTES.RADIATIONS);
 
     } catch (err: any) {
       console.error(err);
-      // Обработка ошибок с бэкенда (например, дубликат логина)
       if (err.response && err.response.status === 500) {
         setError('Пользователь с таким логином уже существует.');
       } else if (err.response && err.response.status === 401) {

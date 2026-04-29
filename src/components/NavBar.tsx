@@ -25,7 +25,7 @@ export const NavBar: FC = () => {
     <Navbar bg="white" expand="lg" className="mb-4 rounded shadow-sm border">
       <Container>
         <Navbar.Brand as={Link} to={ROUTES.RADIATIONS} className="fw-bold text-primary fs-4">
-          ⚡ Эффект
+          ⚡Рассчет фотоэффекта
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

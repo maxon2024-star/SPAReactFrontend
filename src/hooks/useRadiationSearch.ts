@@ -142,7 +142,7 @@ export function useRadiationSearch(initialData: RadiationRange[]) {
       }
       console.log("=========================================");
 
-      setItems(filteredAndSorted.map(({ score, ...item }) => item));
+      setItems(filteredAndSorted as any);
     } catch (error) {
       console.error("❌ Ошибка при поиске по изображению:", error);
     }

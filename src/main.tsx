@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'; // Импортируем Provider
 import App from './App.tsx';
 import { store } from './store'; // Импортируем наш store
 import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
