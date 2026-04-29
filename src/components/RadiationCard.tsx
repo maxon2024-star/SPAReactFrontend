@@ -9,7 +9,7 @@ interface RadiationCardProps {
   name: string;
   description: string;
   image_url?: string;
-  score?: number; // Вернули score для поиска по картинке
+  score?: number; 
 }
 
 export const RadiationCard: FC<RadiationCardProps> = ({ id, name, description, image_url, score }) => {
@@ -33,10 +33,10 @@ export const RadiationCard: FC<RadiationCardProps> = ({ id, name, description, i
   };
 
   return (
-    <div className="card shadow-sm mb-4 h-100 position-relative">
-      {/* Если есть score от CLIP, показываем его поверх картинки */}
+    <div className="card shadow-sm mb-4 h-100 position-relative border-0" style={{ boxShadow: 'var(--shadow)' }}>
+      {/* ИСПОЛЬЗУЕМ ЗЕЛЕНЫЙ КЛАСС ИЗ index.css */}
       {score !== undefined && (
-        <div className="position-absolute top-0 end-0 bg-warning px-2 py-1 m-2 rounded text-dark fw-bold" style={{ zIndex: 1 }}>
+        <div className="similarity-badge shadow-sm">
           ИИ: {(score * 100).toFixed(1)}%
         </div>
       )}
@@ -45,21 +45,24 @@ export const RadiationCard: FC<RadiationCardProps> = ({ id, name, description, i
         src={image_url || '/placeholder.png'} 
         className="card-img-top" 
         alt={name} 
-        style={{ height: '200px', objectFit: 'cover' }} 
+        style={{ height: '200px', objectFit: 'cover', borderTopLeftRadius: '12px', borderTopRightRadius: '12px' }} 
       />
-      <div className="card-body d-flex flex-column">
-        <h5 className="card-title text-primary fw-bold">{name}</h5>
-        <p className="card-text text-muted mb-4" style={{ flexGrow: 1 }}>
-          {description.length > 100 ? `${description.substring(0, 100)}...` : description}
+      <div className="card-body d-flex flex-column p-4">
+        <h5 className="card-title text-primary fw-bold mb-3">{name}</h5>
+        
+        {/* Ограничиваем описание тремя строками для ровности карточек */}
+        <p className="card-text text-muted badge-description mb-4" style={{ flexGrow: 1 }}>
+          {description}
         </p>
         
-        <div className="d-flex justify-content-between align-items-center mt-auto">
-          <Link to={`/${id}`} className="btn btn-outline-secondary">
+        <div className="d-flex justify-content-between align-items-center mt-auto gap-2">
+          {/* Твои красивые кнопки электрик из index.css */}
+          <Link to={`/${id}`} className="btn-details flex-grow-1 justify-content-center text-center px-2">
             Подробнее
           </Link>
           <button 
             onClick={handleAdd} 
-            className="btn btn-primary"
+            className="btn-add flex-grow-1 px-2"
             disabled={loading}
           >
             {loading ? (

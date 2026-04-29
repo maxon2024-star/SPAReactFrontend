@@ -110,7 +110,7 @@ export const CalculationsListPage: React.FC = () => {
             />
           </div>
           <div className={colClass}>
-            <label className="form-label text-muted fw-bold">Статус (БД):</label>
+            <label className="form-label text-muted fw-bold">Статус:</label>
             <select className="form-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
               <option value="">Все статусы</option>
               <option value="сформирован">Сформирована</option>
@@ -122,7 +122,7 @@ export const CalculationsListPage: React.FC = () => {
           {/* Поле поиска по создателю видно ТОЛЬКО модератору */}
           {isModerator && (
             <div className={colClass}>
-              <label className="form-label text-muted fw-bold">Создатель (Локально):</label>
+              <label className="form-label text-muted fw-bold">Создатель:</label>
               <input 
                 type="text" 
                 className="form-control" 

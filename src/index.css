@@ -2,14 +2,19 @@
     /* Светло-голубой Электрик */
     --primary: #00BFFF;
     --primary-light: #1E90FF;
-    --primary-dark: #009ACD;
+    --primary-dark: #007A99; /* Чуть затемнили для контраста в кнопках */
     --primary-glow: rgba(0, 191, 255, 0.4);
 
+    /* Переопределение системных цветов Bootstrap */
+    --bs-primary: #00BFFF;
+    --bs-primary-rgb: 0, 191, 255;
+    --bs-body-color: #1e293b;
+    
     /* Цвета */
     --background: #F0F8FF;
     --surface: #FFFFFF;
-    --text-primary: #1e293b;
-    --text-secondary: #64748b;
+    --text-primary: #0c334d; /* Темно-синий текст */
+    --text-secondary: #0082a3; /* Электрический сине-зеленый (заменит серый) */
     --border: #BAE6FD;
     --success: #10B981;
     --danger: #EF4444;
@@ -614,4 +619,63 @@ body {
 
 .auth-form {
     border: 1px solid var(--border);
+}
+
+/* ================= BOOTSTRAP ================= */
+
+/* 1. Перекрашиваем все "серые" тексты (text-muted, text-secondary) в стильный сине-зеленый
+.text-muted, .text-secondary {
+    color: var(--text-secondary) !important;
+} */
+
+/* 2. Заголовки text-dark делаем глубоко-синими
+.text-dark {
+    color: #082f49 !important; 
+} */
+
+/* 3. Серые фоны панелей (bg-light) делаем цвета светлого льда */
+.bg-light {
+    background-color: #e0f2fe !important;
+}
+
+/* 4. Заголовки таблиц (table-light) делаем нежно-голубыми */
+.table-light {
+    --bs-table-bg: #bae6fd;
+    --bs-table-color: var(--text-primary);
+    --bs-table-border-color: #7dd3fc;
+}
+
+/* 5. Все бордеры (границы) делаем цвета электрик-пастель */
+.border, .border-bottom, .border-top {
+    border-color: var(--border) !important;
+}
+
+/* 6. Кнопки сброса (btn-outline-secondary) перекрашиваем в стилистику проекта */
+.btn-outline-secondary {
+    color: var(--primary-dark);
+    border-color: var(--border);
+    background-color: transparent;
+}
+.btn-outline-secondary:hover {
+    background-color: var(--border);
+    color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+/* 7. Серые кнопки (btn-secondary - например, когда корзина пуста) */
+.btn-secondary {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: white;
+}
+.btn-secondary:hover {
+    background-color: #005c7a;
+    border-color: #005c7a;
+    color: white;
+}
+
+/* 8. Электрическое свечение (glow) при фокусе на любых инпутах и селектах */
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem var(--primary-glow);
 }

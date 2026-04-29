@@ -86,16 +86,17 @@ export const RadiationsPage: FC = () => {
               style={{ display: 'none' }}
               onChange={handleImageUpload}
             />
+            {/* ТУТ ПОМЕНЯЛИ btn-outline-secondary НА btn-outline-primary */}
             <button 
               onClick={() => fileInputRef.current?.click()} 
-              className={`btn ${ready ? 'btn-outline-secondary' : 'btn-secondary'} d-flex align-items-center gap-2`}
+              className={`btn ${ready ? 'btn-outline-primary' : 'btn-secondary'} fw-bold d-flex align-items-center gap-2 shadow-sm`}
               disabled={!ready}
             >
               📷 {ready ? 'Поиск по фото' : 'Загрузка ИИ...'}
             </button>
 
             {selectedImage && (
-              <div className="d-flex align-items-center gap-2 border rounded p-1 pe-2">
+              <div className="d-flex align-items-center gap-2 border border-primary rounded p-1 pe-2 bg-light">
                 <img src={selectedImage} alt="Preview" style={{ width: '30px', height: '30px', objectFit: 'cover', borderRadius: '4px' }} />
                 <button onClick={handleClearImage} className="btn-close" aria-label="Close"></button>
               </div>
@@ -104,7 +105,7 @@ export const RadiationsPage: FC = () => {
         </div>
       </div>
 
-      <h3 className="fw-bold mb-3 text-secondary">Каталог диапазонов</h3>
+      <h3 className="fw-bold mb-3 text-primary">Каталог диапазонов</h3>
       
       {/* Сетка карточек */}
       <div className="services-grid">
