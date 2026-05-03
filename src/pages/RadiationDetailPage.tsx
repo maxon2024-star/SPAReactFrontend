@@ -12,9 +12,17 @@ export const RadiationDetailPage: FC = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const itemRes = await fetch(`/api/radiations/${id}`);
+        // 1. Бьем жестко по IP-адресу бэкенда (как мы сделали на главной)
+        const itemRes = await fetch(`http://10.254.43.49:8000/api/radiations/${id}`);
         if (!itemRes.ok) throw new Error();
         const item = await itemRes.json();
+
+        // 2. Жестко меняем localhost на IP-адрес для видео (и для картинок на всякий случай)
+        if (item.video_url) item.video_url = item.video_url.replace('localhost', '10.254.43.49');
+        if (item.videoUrl) item.videoUrl = item.videoUrl.replace('localhost', '10.254.43.49');
+        if (item.image_url) item.image_url = item.image_url.replace('localhost', '10.254.43.49');
+        if (item.imageUrl) item.imageUrl = item.imageUrl.replace('localhost', '10.254.43.49');
+
         setRadiation(item);
       } catch (err) {
         console.warn("Бэкенд недоступен, работаем с mock-данными", err);

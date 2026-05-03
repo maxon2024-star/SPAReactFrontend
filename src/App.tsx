@@ -11,6 +11,11 @@ import { AuthPage } from "./pages/AuthPage";
 import { fetchDraftSummary } from "./slices/applicationSlice";
 import type { RootState, AppDispatch } from "./store";
 
+// // Если это Tauri, роутер работает от корня '/'. 
+// // Если это Github Pages (браузер) - от имени репозитория.
+// const isTauri = '__TAURI__' in window;
+// const routerBaseName = isTauri ? "/" : "/SPAReactFrontend/";
+
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector((state: RootState) => state.applications.loading);
@@ -24,7 +29,7 @@ function App() {
   }, [isAuth, dispatch]);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/">
       {/* Глобальный блокировщик экрана при выполнении Thunk-запросов (по ТЗ) */}
       {isLoading && (
         <div 

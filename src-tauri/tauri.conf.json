@@ -1,0 +1,40 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "photoeffect-frontend",
+  "version": "0.1.1",
+  "identifier": "com.maxz.radiationapp",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "https://localhost:5173",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "photoeffect-frontend",
+        "width": 800,
+        "height": 600,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self' http://10.254.43.49:8000; connect-src 'self' http://10.254.43.49:8000 https://huggingface.co https://*.huggingface.co https://*.hf.co; img-src 'self' data: blob: http://10.254.43.49:8000 http://10.254.43.49:9000 http://localhost:9000 https://images.unsplash.com; media-src 'self' http://10.254.43.49:9000 http://localhost:9000; script-src 'self'; style-src 'self' 'unsafe-inline';"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "android": {
+      "debugApplicationIdSuffix": ".debug"
+    }
+  }
+}

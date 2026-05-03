@@ -1,14 +1,43 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+import mkcert from 'vite-plugin-mkcert';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    mkcert(), // Включает HTTPS локально
+    VitePWA({
+      registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true // Позволяет тестить PWA даже на localhost
+      },
+      manifest: {
+        name: 'Radiations App',
+        short_name: 'RadApp',
+        description: 'Приложение для расчета излучений',
+        theme_color: '#ffffff',
+        icons: [
+          {
+            src: 'favicon.svg', // Используем твою иконку из public
+            sizes: '192x192',
+            type: 'image/svg+xml'
+          },
+          {
+            src: 'favicon.svg',
+            sizes: '512x512',
+            type: 'image/svg+xml'
+          }
+        ]
+      }
+    })
+  ],
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8000', // Порт вашего Go-бэкенда
+        target: 'http://localhost:8000',
         changeOrigin: true,
       }
     }
   }
-})
+});

@@ -27,3 +27,8 @@ export const CalculationsApi = {
   completeCalculation: (id: number, action: 'accept' | 'reject') => 
     apiClient.put(`/api/calculations/${id}/complete`, { action }),
 };
+
+export const AuthApi = {
+  register: (data: any) => apiClient.post('/api/users/register', data),
+  login: (data: any) => apiClient.post('/api/users/login', data),
+};

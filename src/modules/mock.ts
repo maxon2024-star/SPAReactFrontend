@@ -7,7 +7,8 @@ export interface RadiationRange {
   short_description?: string; 
   description: string;
   image_url: string;
-  score?: number;             
+  score?: number;
+  video_url?: string;             
 }
 
 export const RADIATIONS_MOCK: RadiationRange[] = [

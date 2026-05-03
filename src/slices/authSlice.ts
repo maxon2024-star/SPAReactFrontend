@@ -47,8 +47,8 @@ export const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.isAuth = false;
-      localStorage.removeItem('jwt');
-      localStorage.removeItem('user');
+      // localStorage.removeItem('jwt');
+      // localStorage.removeItem('user');
     },
   },
 });

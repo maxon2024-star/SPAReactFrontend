@@ -6,9 +6,14 @@ import { BreadCrumbs } from "../components/BreadCrumbs";
 import { RadiationCard } from "../components/RadiationCard";
 import { CartWidget } from "../components/CartWidget";
 import { useRadiationSearch } from "../hooks/useRadiationSearch";
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState, AppDispatch } from '../store';
+import { setSearchValue } from '../slices/filterSlice';
 
 export const RadiationsPage: FC = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const searchValue = useSelector((state: RootState) => state.filter.searchValue);
+  const dispatch = useDispatch<AppDispatch>();
+  
   const [fetchedRadiations, setFetchedRadiations] = useState<RadiationRange[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
@@ -21,16 +26,39 @@ export const RadiationsPage: FC = () => {
     setIsLoading(true);
     try {
       const query = search ? `?search=${encodeURIComponent(search)}` : "";
-      const res = await fetch(`/api/radiations${query}`);
+      
+      // Проверяем, запущен ли код внутри десктопного приложения Tauri
+      const isTauri = '__TAURI__' in window;
+      
+      // Если это Tauri - бьем строго по IP. Если браузер с HTTPS - используем прокси ''.
+      const baseUrl = isTauri 
+        ? 'http://10.254.43.49:8000' 
+        : (window.location.protocol === 'https:' ? '' : 'http://10.254.43.49:8000');
+        
+      const res = await fetch(`${baseUrl}/api/radiations${query}`);
+      
       if (!res.ok) throw new Error();
       const data = await res.json();
-      setFetchedRadiations(data);
+      const fixedData = data.map((item: any) => ({
+        ...item,
+        // Ищем поле картинки и меняем localhost на IP-адрес ZeroTier
+        imageUrl: item.imageUrl ? item.imageUrl.replace('localhost', '10.254.43.49') : 
+                 (item.image_url ? item.image_url.replace('localhost', '10.254.43.49') : ''),
+        videoUrl: item.videoUrl ? item.videoUrl.replace('localhost', '10.254.43.49') : 
+                 (item.video_url ? item.video_url.replace('localhost', '10.254.43.49') : '')
+      }));
+      // Сохраняем в стейт уже исправленные данные
+      setFetchedRadiations(fixedData);
     } catch (error) {
-      console.warn("Fallback на mock-данные");
-      const filtered = RADIATIONS_MOCK.filter((item) =>
-        item.name.toLowerCase().includes(search.toLowerCase())
-      );
-      setFetchedRadiations(filtered);
+      console.warn("Бэкенд недоступен, работаем с mock-данными");
+      // Если поиск пустой, отдаем все моки. Иначе - фильтруем.
+      const filteredMocks = search
+        ? RADIATIONS_MOCK.filter((item) =>
+            item.name.toLowerCase().includes(search.toLowerCase())
+          )
+        : RADIATIONS_MOCK;
+        
+      setFetchedRadiations(filteredMocks);
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +95,7 @@ export const RadiationsPage: FC = () => {
                 type="text" 
                 placeholder="Поиск диапазона по названию..." 
                 value={searchValue} 
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e) => dispatch(setSearchValue(e.target.value))}
                 onKeyDown={(e) => e.key === 'Enter' && fetchRadiations(searchValue)}
                 className="form-control" 
               />
@@ -108,11 +136,17 @@ export const RadiationsPage: FC = () => {
       <h3 className="fw-bold mb-3 text-primary">Каталог диапазонов</h3>
       
       {/* Сетка карточек */}
-      <div className="services-grid">
+      <div className="row g-4"> {/* Заменили services-grid на сетку Bootstrap (row) с отступами (g-4) */}
         {isLoading ? (
           <div className="text-center w-100 py-5 text-muted">Загрузка данных...</div>
         ) : displayRadiations.length > 0 ? (
-          displayRadiations.map(r => <RadiationCard key={r.id} {...r} />)
+          displayRadiations.map(r => (
+            /* ДОБАВЛЕНА ОБЕРТКА КОЛОНОК */
+            /* На телефоне (col-12) - 1 колонка, на планшете (col-md-6) - 2, на ПК (col-lg-4) - 3 */
+            <div key={r.id} className="col-12 col-md-6 col-lg-4">
+              <RadiationCard {...r} />
+            </div>
+          ))
         ) : (
           <div className="text-center w-100 py-5 text-muted">Ничего не найдено. Попробуйте изменить запрос.</div>
         )}

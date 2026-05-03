@@ -24,7 +24,7 @@ export const NavBar: FC = () => {
   return (
     <Navbar bg="white" expand="lg" className="mb-4 rounded shadow-sm border">
       <Container>
-        <Navbar.Brand as={Link} to={ROUTES.RADIATIONS} className="fw-bold text-primary fs-4">
+        <Navbar.Brand as={Link as any}to={ROUTES.RADIATIONS} className="fw-bold text-primary fs-4">
           ⚡Рассчет фотоэффекта
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -37,7 +37,7 @@ export const NavBar: FC = () => {
                 </span>
                 
                 <Button 
-                  as={Link} 
+                  as={Link as any}
                   to={ROUTES.CALCULATIONS}
                   variant="outline-info"
                   className="me-2"
@@ -47,7 +47,7 @@ export const NavBar: FC = () => {
                 
                 {/* ТЗ: Если черновик есть - кнопка доступна (primary), нет - другой стиль (secondary) и disabled */}
                 <Button 
-                  as={Link} 
+                  as={Link as any}
                   to={draftId ? `${ROUTES.CALCULATIONS}/${draftId}` : '#'}
                   variant={draftId ? "primary" : "secondary"}
                   disabled={!draftId}
@@ -62,10 +62,10 @@ export const NavBar: FC = () => {
               </>
             ) : (
               <>
-                <Button as={Link} to={ROUTES.LOGIN} variant="outline-primary" className="me-2">
+                <Button as={Link as any}to={ROUTES.LOGIN} variant="outline-primary" className="me-2">
                   Вход
                 </Button>
-                <Button as={Link} to={ROUTES.REGISTER} variant="primary">
+                <Button as={Link as any}to={ROUTES.REGISTER} variant="primary">
                   Регистрация
                 </Button>
               </>
