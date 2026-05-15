@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-// Проверяем, запущен ли код внутри десктопного приложения Tauri
 const isTauri = '__TAURI__' in window;
+const FIXED_IP = '10.254.43.49:8000';
 
-// Если это Tauri - бьем строго по IP. Если браузер с HTTPS - используем прокси ''.
 const BASE_URL = isTauri 
-  ? 'http://10.254.43.49:8000' 
-  : (window.location.protocol === 'https:' ? '' : 'http://10.254.43.49:8000');
+  ? `http://${FIXED_IP}` 
+  : (window.location.protocol === 'https:' ? '' : `http://${FIXED_IP}`);
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
+  timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
   },

@@ -24,12 +24,12 @@ export const AuthPage: React.FC<AuthProps> = ({ type }) => {
         ? { login, password, role: 1 } 
         : { login, password };
 
-      const endpoint = type === 'login' ? '/api/users/login' : '/api/users/register';
+      const endpoint = type === 'login' ? 'http://10.254.43.49:8000/api/users/login' : 'http://10.254.43.49:8000/api/users/register';
       
       let res = await apiClient.post(endpoint, payload);
 
       if (type === 'register') {
-        res = await apiClient.post('/api/users/login', { login, password });
+        res = await apiClient.post('http://10.254.43.49:8000/api/users/login', { login, password });
       }
 
       const token = res.data.access_token || res.data.token;

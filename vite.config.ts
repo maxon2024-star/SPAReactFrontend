@@ -4,6 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import mkcert from 'vite-plugin-mkcert';
 
 export default defineConfig({
+  base: '/',
   plugins: [
     react(),
     mkcert(), // Включает HTTPS локально
@@ -33,6 +34,8 @@ export default defineConfig({
     })
   ],
   server: {
+    port: 52840,
+    strictPort: true,
     proxy: {
       '/api': {
         target: 'http://localhost:8000',

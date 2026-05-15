@@ -12,8 +12,16 @@ export const RadiationDetailPage: FC = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 секунды
+
         // 1. Бьем жестко по IP-адресу бэкенда (как мы сделали на главной)
-        const itemRes = await fetch(`http://10.254.43.49:8000/api/radiations/${id}`);
+        const itemRes = await fetch(`http://10.254.43.49:8000/api/radiations/${id}`, {
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
         if (!itemRes.ok) throw new Error();
         const item = await itemRes.json();
 

@@ -1,13 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { CalculationsApi, type M2MInput } from '../api/generated';
 
-export const fetchCalculations = createAsyncThunk(
-  'calculations/fetchAll',
-  async (filters: { status?: string; date_from?: string; date_to?: string }) => {
-    const response = await CalculationsApi.getCalculations(filters);
-    return response.data;
-  }
-);
+export const fetchCalculations = createAsyncThunk('calculations/fetchAll', async (filters: any) => {
+  const response = await CalculationsApi.getCalculations(filters);
+  return response.data;
+});
 
 export const fetchDraftSummary = createAsyncThunk('calculations/draftSummary', async () => {
   const response = await CalculationsApi.getDraftSummary();
@@ -19,9 +16,21 @@ export const fetchCalculationById = createAsyncThunk('calculations/fetchById', a
   return response.data;
 });
 
+export const updateCalculationFields = createAsyncThunk(
+  'calculations/updateFields', 
+  async (data: { id: number, theme?: string, description?: string, total_current?: number }, { dispatch }) => {
+    await CalculationsApi.updateCalculation(data.id, data);
+    dispatch(fetchCalculationById(data.id) as any);
+  }
+);
+
+export const deleteCalculation = createAsyncThunk('calculations/delete', async (id: number, { dispatch }) => {
+  await CalculationsApi.deleteCalculation(id);
+  dispatch(fetchDraftSummary() as any);
+});
+
 export const addToDraft = createAsyncThunk('calculations/add', async (input: M2MInput, { dispatch }) => {
   await CalculationsApi.addRadiationToCart(input);
-  // После добавления обновляем ID черновика
   dispatch(fetchDraftSummary() as any);
 });
 
@@ -53,7 +62,7 @@ const applicationSlice = createSlice({
     list: [] as any[],
     currentApp: null as any,
     draftId: null as number | null,
-    loading: false,
+    loading: false, // Глобальный лоадер для блокировки кнопок!
   },
   reducers: {
     clearDraftAndFilters: (state) => {
@@ -65,33 +74,17 @@ const applicationSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchCalculations.fulfilled, (state, action) => { state.list = action.payload || []; })
-      
-      // УМНЫЙ ПАРСИНГ ID ЧЕРНОВИКА
       .addCase(fetchDraftSummary.fulfilled, (state, action) => { 
         const data = action.payload;
-        if (typeof data === 'number') {
-            state.draftId = data > 0 ? data : null;
-        } else if (data && typeof data === 'object') {
-            // Ищем ID под любым возможным ключом, который мог отдать Go
-            state.draftId = data.id || data.draft_id || data.ID || data.draftId || null;
-        } else {
-            state.draftId = null;
-        }
+        state.draftId = (typeof data === 'number') ? (data > 0 ? data : null) : (data?.id || data?.draft_id || data?.ID || null);
       })
-      
       .addCase(fetchCalculationById.pending, (state) => { state.loading = true; state.currentApp = null; })
       .addCase(fetchCalculationById.fulfilled, (state, action) => { state.loading = false; state.currentApp = action.payload; })
       
-      .addCase(addToDraft.pending, (state) => { state.loading = true; })
-      .addCase(addToDraft.fulfilled, (state) => { state.loading = false; })
-      .addCase(updateDraftItem.pending, (state) => { state.loading = true; })
-      .addCase(updateDraftItem.fulfilled, (state) => { state.loading = false; })
-      .addCase(removeFromDraft.pending, (state) => { state.loading = true; })
-      .addCase(removeFromDraft.fulfilled, (state) => { state.loading = false; })
-      .addCase(formDraft.pending, (state) => { state.loading = true; })
-      .addCase(formDraft.fulfilled, (state) => { state.loading = false; state.draftId = null; })
-      .addCase(resolveCalculation.pending, (state) => { state.loading = true; })
-      .addCase(resolveCalculation.fulfilled, (state) => { state.loading = false; })
+      // Блокируем кнопки во время любых изменений (анимация загрузки по ТЗ)
+      .addMatcher((action) => action.type.endsWith('/pending') && action.type.startsWith('calculations/'), (state) => { state.loading = true; })
+      .addMatcher((action) => action.type.endsWith('/fulfilled') && action.type.startsWith('calculations/'), (state) => { state.loading = false; })
+      .addMatcher((action) => action.type.endsWith('/rejected') && action.type.startsWith('calculations/'), (state) => { state.loading = false; });
   },
 });
 

@@ -26,17 +26,18 @@ export const RadiationsPage: FC = () => {
     setIsLoading(true);
     try {
       const query = search ? `?search=${encodeURIComponent(search)}` : "";
+
+      const baseUrl = 'http://10.254.43.49:8000';
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
       
-      // Проверяем, запущен ли код внутри десктопного приложения Tauri
-      const isTauri = '__TAURI__' in window;
-      
-      // Если это Tauri - бьем строго по IP. Если браузер с HTTPS - используем прокси ''.
-      const baseUrl = isTauri 
-        ? 'http://10.254.43.49:8000' 
-        : (window.location.protocol === 'https:' ? '' : 'http://10.254.43.49:8000');
-        
-      const res = await fetch(`${baseUrl}/api/radiations${query}`);
-      
+      const res = await fetch(`${baseUrl}/api/radiations${query}`, {
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
       if (!res.ok) throw new Error();
       const data = await res.json();
       const fixedData = data.map((item: any) => ({

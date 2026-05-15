@@ -5,7 +5,7 @@
   "identifier": "com.maxz.radiationapp",
   "build": {
     "frontendDist": "../dist",
-    "devUrl": "https://localhost:5173",
+    "devUrl": "https://localhost:52840",
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build"
   },
@@ -20,8 +20,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self' http://10.254.43.49:8000; connect-src 'self' http://10.254.43.49:8000 https://huggingface.co https://*.huggingface.co https://*.hf.co; img-src 'self' data: blob: http://10.254.43.49:8000 http://10.254.43.49:9000 http://localhost:9000 https://images.unsplash.com; media-src 'self' http://10.254.43.49:9000 http://localhost:9000; script-src 'self'; style-src 'self' 'unsafe-inline';"
-    }
+      "csp": "default-src 'self' http://10.254.43.49:8000; connect-src 'self' http://10.254.43.49:8000 https://huggingface.co https://*.huggingface.co https://*.hf.co https://cdn.jsdelivr.net; img-src 'self' data: blob: http://10.254.43.49:8000 http://10.254.43.49:9000 http://localhost:9000 https://images.unsplash.com; media-src 'self' http://10.254.43.49:9000 http://localhost:9000; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net blob:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline';"    }
   },
   "bundle": {
     "active": true,
