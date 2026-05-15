@@ -1,11 +1,6 @@
 import axios from 'axios';
 
-const isTauri = '__TAURI__' in window;
-const FIXED_IP = '10.254.43.49:8000';
-
-const BASE_URL = isTauri 
-  ? `http://${FIXED_IP}` 
-  : (window.location.protocol === 'https:' ? '' : `http://${FIXED_IP}`);
+const BASE_URL = 'http://10.254.43.49:8000';
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,

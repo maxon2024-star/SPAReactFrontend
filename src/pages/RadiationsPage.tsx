@@ -27,7 +27,7 @@ export const RadiationsPage: FC = () => {
     try {
       const query = search ? `?search=${encodeURIComponent(search)}` : "";
 
-      const baseUrl = 'http://10.254.43.49:8000';
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://10.254.43.49:8000';
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);

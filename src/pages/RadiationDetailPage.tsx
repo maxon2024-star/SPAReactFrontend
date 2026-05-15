@@ -13,10 +13,14 @@ export const RadiationDetailPage: FC = () => {
     const loadData = async () => {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 секунды
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 секунд
 
-        // 1. Бьем жестко по IP-адресу бэкенда (как мы сделали на главной)
-        const itemRes = await fetch(`http://10.254.43.49:8000/api/radiations/${id}`, {
+        // 1. Берем базовый URL из .env
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://10.254.43.49:8000';
+        const apiHost = new URL(baseUrl).hostname; 
+
+        // 2. Делаем запрос по динамическому URL
+        const itemRes = await fetch(`${baseUrl}/api/radiations/${id}`, {
           signal: controller.signal
         });
 
@@ -25,11 +29,11 @@ export const RadiationDetailPage: FC = () => {
         if (!itemRes.ok) throw new Error();
         const item = await itemRes.json();
 
-        // 2. Жестко меняем localhost на IP-адрес для видео (и для картинок на всякий случай)
-        if (item.video_url) item.video_url = item.video_url.replace('localhost', '10.254.43.49');
-        if (item.videoUrl) item.videoUrl = item.videoUrl.replace('localhost', '10.254.43.49');
-        if (item.image_url) item.image_url = item.image_url.replace('localhost', '10.254.43.49');
-        if (item.imageUrl) item.imageUrl = item.imageUrl.replace('localhost', '10.254.43.49');
+        // 3. Динамически меняем localhost на IP из .env
+        if (item.video_url) item.video_url = item.video_url.replace('localhost', apiHost);
+        if (item.videoUrl) item.videoUrl = item.videoUrl.replace('localhost', apiHost);
+        if (item.image_url) item.image_url = item.image_url.replace('localhost', apiHost);
+        if (item.imageUrl) item.imageUrl = item.imageUrl.replace('localhost', apiHost);
 
         setRadiation(item);
       } catch (err) {

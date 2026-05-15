@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import mkcert from 'vite-plugin-mkcert';
 
 export default defineConfig({
-  base: '/',
+  base: '/SPAReactFrontend/',
   plugins: [
     react(),
     mkcert(), // Включает HTTPS локально

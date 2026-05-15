@@ -14,7 +14,7 @@ import type { RootState, AppDispatch } from "./store";
 // Если это Tauri, роутер работает от корня '/'. 
 // Если это Github Pages (браузер) - от имени репозитория.
 
-const routerBaseName = "/";
+const routerBaseName = "/SPAReactFrontend/";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
